@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#0a0e27">
+    <title>Cosmic Mining Empire</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
+</head>
+<body>
+    <!-- Save Notification -->
+    <div id="saveNotification" class="save-notification">
+        💾
+    </div>
+
+    <!-- Offline Earnings Modal -->
+    <div id="offlineModal" class="offline-modal">
+        <div class="offline-content">
+            <h2>🌌 Welcome Back!</h2>
+            <p class="offline-text">While you were away for <strong id="offlineTime">0m</strong></p>
+            <div class="offline-earnings">
+                <div class="earnings-label">You earned</div>
+                <div class="earnings-amount">💎 <span id="offlineEarnings">0</span></div>
+            </div>
+            <button class="claim-btn" onclick="closeOfflineModal()">CLAIM CRYSTALS</button>
+        </div>
+    </div>
+
+    <!-- Statistics Page Modal -->
+    <div id="statsPage" class="stats-page">
+        <div class="stats-content">
+            <div class="stats-header">
+                <h2>📊 STATISTICS</h2>
+                <button class="close-btn" onclick="toggleStatsPage()">✕</button>
+            </div>
+            
+            <div class="stats-grid">
+                <!-- Currency Stats -->
+                <div class="stat-category">
+                    <h3>💎 Currency Stats</h3>
+                    <div class="stat-row">
+                        <span class="stat-name">Total Crystals Earned:</span>
+                        <span class="stat-value" id="stat-totalCrystalsEarned">0</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-name">Total Crystals Spent:</span>
+                        <span class="stat-value" id="stat-totalCrystalsSpent">0</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-name">Current Crystals:</span>
+                        <span class="stat-value" id="stat-currentCrystals">0</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-name">Offline Earnings:</span>
+                        <span class="stat-value" id="stat-offlineEarnings">0</span>
+                    </div>
+                </div>
+                
+                <!-- Production Stats -->
+                <div class="stat-category">
+                    <h3>⚡ Production Stats</h3>
+                    <div class="stat-row">
+                        <span class="stat-name">Current CPS:</span>
+                        <span class="stat-value" id="stat-currentCPS">0</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-name">Highest CPS:</span>
+                        <span class="stat-value" id="stat-highestCPS">0</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-name">Current Click Power:</span>
+                        <span class="stat-value" id="stat-currentClickPower">1</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-name">Highest Click Power:</span>
+                        <span class="stat-value" id="stat-highestClickPower">1</span>
+                    </div>
+                </div>
+                
+                <!-- Activity Stats -->
+                <div class="stat-category">
+                    <h3>👆 Activity Stats</h3>
+                    <div class="stat-row">
+                        <span class="stat-name">Total Clicks:</span>
+                        <span class="stat-value" id="stat-totalClicks">0</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-name">Upgrades Purchased:</span>
+                        <span class="stat-value" id="stat-totalUpgrades">0</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-name">Manual Saves:</span>
+                        <span class="stat-value" id="stat-manualSaves">0</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-name">Click Efficiency:</span>
+                        <span class="stat-value" id="stat-clickEfficiency">0</span>
+                    </div>
+                </div>
+                
+                <!-- Time Stats -->
+                <div class="stat-category">
+                    <h3>⏰ Time Stats</h3>
+                    <div class="stat-row">
+                        <span class="stat-name">Session Time:</span>
+                        <span class="stat-value" id="stat-sessionTime">0s</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-name">Total Play Time:</span>
+                        <span class="stat-value" id="stat-totalPlayTime">0s</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hall of Fame Page Modal -->
+    <div id="hallOfFamePage" class="hall-of-fame-page">
+        <div class="hall-of-fame-content">
+            <div class="hall-of-fame-header">
+                <h2>🏆 HALL OF FAME</h2>
+                <button class="close-btn" onclick="toggleHallOfFame()">✕</button>
+            </div>
+            
+            <!-- Tab Navigation -->
+            <div class="hall-tabs">
+                <button class="hall-tab active" onclick="switchHallTab('achievements')">🎖️ Achievements</button>
+                <button class="hall-tab" onclick="switchHallTab('records')">⚡ Speed Records</button>
+                <button class="hall-tab" onclick="switchHallTab('runs')">📊 Best Runs</button>
+                <button class="hall-tab" onclick="switchHallTab('prestige')">⭐ Prestige</button>
+            </div>
+            
+            <!-- Achievements Tab -->
+            <div id="tab-achievements" class="hall-tab-content active">
+                <div class="prestige-summary">
+                    <div class="prestige-stat">
+                        <span class="prestige-label">Prestige Points:</span>
+                        <span class="prestige-value" id="prestigePoints">0</span>
+                    </div>
+                    <div class="prestige-stat">
+                        <span class="prestige-label">Achievements Unlocked:</span>
+                        <span class="prestige-value" id="achievementCount">0 / 30</span>
+                    </div>
+                </div>
+                
+                <div class="achievements-grid" id="achievementsGrid">
+                    <!-- Achievements populated by JavaScript -->
+                </div>
+            </div>
+            
+            <!-- Speed Records Tab -->
+            <div id="tab-records" class="hall-tab-content">
+                <div class="records-container">
+                    <h3>⚡ Speed Challenges</h3>
+                    <div class="records-list" id="speedRecordsList">
+                        <!-- Speed records populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Best Runs Tab -->
+            <div id="tab-runs" class="hall-tab-content">
+                <div class="runs-container">
+                    <h3>📊 Top 10 Runs</h3>
+                    <div class="current-run-info">
+                        <h4>Current Run</h4>
+                        <div class="run-stats">
+                            <div class="run-stat">
+                                <span>Duration:</span>
+                                <span id="currentRunDuration">0s</span>
+                            </div>
+                            <div class="run-stat">
+                                <span>Crystals Earned:</span>
+                                <span id="currentRunCrystals">0</span>
+                            </div>
+                            <div class="run-stat">
+                                <span>Clicks:</span>
+                                <span id="currentRunClicks">0</span>
+                            </div>
+                            <div class="run-stat">
+                                <span>Upgrades:</span>
+                                <span id="currentRunUpgrades">0</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="runs-list" id="topRunsList">
+                        <!-- Top runs populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Prestige Tab -->
+            <div id="tab-prestige" class="hall-tab-content">
+                <div class="prestige-container">
+                    <div class="prestige-info">
+                        <h3>⭐ PRESTIGE SYSTEM</h3>
+                        <p>Reset your progress to gain permanent bonuses!</p>
+                        
+                        <div class="prestige-stats-box">
+                            <div class="prestige-stat-row">
+                                <span>Current Prestige Level:</span>
+                                <span class="highlight" id="currentPrestigeLevel">0</span>
+                            </div>
+                            <div class="prestige-stat-row">
+                                <span>Available Prestige Points:</span>
+                                <span class="highlight" id="availablePrestigePoints">0</span>
+                            </div>
+                            <div class="prestige-stat-row">
+                                <span>Lifetime Prestige Points:</span>
+                                <span class="highlight" id="lifetimePrestigePoints">0</span>
+                            </div>
+                        </div>
+                        
+                        <div class="prestige-requirements">
+                            <h4>Prestige Requirements:</h4>
+                            <ul>
+                                <li>✅ Reach 1,000,000 total crystals</li>
+                                <li>✅ Unlock at least 10 achievements</li>
+                                <li id="prestigeReq3">❌ Reach Tier 3</li>
+                            </ul>
+                        </div>
+                        
+                        <button id="prestigeBtn" class="prestige-btn" onclick="performPrestige()">
+                            ⭐ PRESTIGE (RESET & GAIN BONUSES)
+                        </button>
+                        
+                        <div class="prestige-bonuses">
+                            <h4>🎁 Current Prestige Bonuses:</h4>
+                            <div id="prestigeBonusesList">
+                                <p class="no-bonuses">No prestige bonuses yet. Prestige to gain permanent upgrades!</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="game-container">
+        <!-- Header Section -->
+        <header>
+            <h1>🌌 COSMIC MINING EMPIRE</h1>
+        </header>
+
+        <!-- Stats Display -->
+        <div class="stats-panel">
+            <div class="stat-item crystal-stat">
+                <span class="stat-label">💎 Crystals:</span>
+                <span class="stat-value" id="crystals">0</span>
+            </div>
+            <div class="stat-item crystal-stat">
+                <span class="stat-label">⚡ Per Second:</span>
+                <span class="stat-value" id="crystalsPerSecond">0</span>
+            </div>
+            <div class="stat-item crystal-stat">
+                <span class="stat-label">👆 Per Click:</span>
+                <span class="stat-value" id="crystalsPerClick">1</span>
+            </div>
+            
+            <!-- Energy Display -->
+            <div class="stat-item energy-stat">
+                <span class="stat-label">⚡ Energy:</span>
+                <span class="stat-value" id="energy">0</span>
+                <span class="stat-max">/ <span id="maxEnergy">100</span></span>
+            </div>
+            <div class="stat-item energy-stat">
+                <span class="stat-label">🔋 Energy/sec:</span>
+                <span class="stat-value" id="energyPerSecond">0.1</span>
+            </div>
+            
+            <!-- Gems Display -->
+            <div class="stat-item gem-stat">
+                <span class="stat-label">💠 Rare Gems:</span>
+                <span class="stat-value" id="gems">0</span>
+            </div>
+        </div>
+
+        <!-- Sound Initialization Notice (NEW) -->
+        <div id="soundInitNotice" class="sound-init-notice">
+            <p>🔊 Click here to enable sound effects!</p>
+            <button id="initSoundBtn" class="init-sound-btn">ENABLE SOUNDS</button>
+        </div>
+
+        <!-- Mining Area -->
+        <div class="mining-area">
+            <button id="asteroid" class="asteroid">
+                🪨
+                <div class="click-text">CLICK TO MINE!</div>
+            </button>
+            <div id="floatingNumbers"></div>
+        </div>
+
+        <!-- Resource Info -->
+        <div class="resource-info">
+            <div class="info-item">💎 <strong>Crystals:</strong> Main currency for most upgrades</div>
+            <div class="info-item">⚡ <strong>Energy:</strong> Auto-fills, used for special upgrades</div>
+            <div class="info-item">💠 <strong>Rare Gems:</strong> Random drops from clicks, unlock powerful upgrades</div>
+        </div>
+
+        <!-- Upgrades Section -->
+        <div class="upgrades-section">
+            <h2>⚙️ UPGRADES</h2>
+            <div class="upgrades-container" id="upgradesContainer">
+                <!-- Upgrades will be generated by JavaScript -->
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer>
+            <button id="soundToggle" class="action-btn" onclick="toggleSound()">🔊 Sound On</button>
+            <button id="hallOfFameBtn" class="action-btn" onclick="toggleHallOfFame()">🏆 Hall of Fame</button>
+            <button id="statsBtn" class="action-btn" onclick="toggleStatsPage()">📊 Statistics</button>
+            <button id="saveBtn" class="action-btn">💾 Save Game</button>
+            <button id="resetBtn" class="action-btn">🔄 Reset Game</button>
+        </footer>
+    </div>
+
+    <script src="game.js"></script>
+</body>
+</html>
